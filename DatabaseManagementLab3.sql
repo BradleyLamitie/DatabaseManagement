@@ -1,6 +1,6 @@
 --List the order	number and total dollars of	all	orders.	--
 
-SELECT    ordnum, totalusd
+SELECT    ordnum, totalusd potato
 FROM      orders;
 
 --List the name and city of agents named Smith--
