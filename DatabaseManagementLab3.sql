@@ -1,6 +1,15 @@
+----------------------------------------------
+--Bradley Lamitie                           --
+--Lab 3:	Getting	Started	with SQL Queries--
+--Assigned on 9/15/2016                     --
+--Due on 9/22/2016                          --
+--Database Management ~ Labouseur           --
+----------------------------------------------
+
+
 --List the order	number and total dollars of	all	orders.	--
 
-SELECT    ordnum, totalusd potato
+SELECT    ordnum, totalusd
 FROM      orders;
 
 --List the name and city of agents named Smith--
