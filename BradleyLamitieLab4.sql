@@ -118,3 +118,32 @@ WHERE           discount   IN (
                          )
 ORDER BY cid DESC;
 
+
+--#8                                                                                      --
+--                                                                                        --
+--	Check constraints are used to limit the value range that can be placed in a column.   --
+-- Check constraints ensure that your data has integrity. The advantage is that the field --
+-- will only take a certain range of values. This ensures that whenever data is entered   --
+-- it follows the guidelines you need it to. A good use of a check constraint would be    --
+-- for when a user enters their age. The age would definitely have to be greater than 0.  --
+-- A bad use would be to use constraints to break up the data's integrity. For example,   --
+-- for age, using check constraints to ensure that users can't enter anything over 85     --
+-- wouldn't be good for the data. the difference is that good constraints make sure that  --
+-- someone doesn't enter data that could later cause an error in the application, while   --
+-- bad constraints will limit the valuable data that could have been entered.             --
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                --
