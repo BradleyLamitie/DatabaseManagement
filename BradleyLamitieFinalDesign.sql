@@ -48,7 +48,7 @@ INSERT INTO Gamers
    
 CREATE TABLE Areas
 (
-	areaName TEXT NOT NULL UNIQUE PRIMARY KEY,
+	areaName 		TEXT 		NOT NULL UNIQUE PRIMARY KEY,
 	connection   	TEXT 		NOT NULL,
 	connection1  	TEXT 		DEFAULT(' '),
 	connection2  	TEXT 		DEFAULT(' '),
@@ -82,8 +82,8 @@ CREATE TABLE PlayerCharacters
     gamertag 			TEXT 		NOT NULL references Gamers(gamertag),
 	playerName 			TEXT 		NOT NULL UNIQUE,
 	areaName 			TEXT 		NOT NULL references Areas(areaName),
-    souls 				INT 		NOT NULL, 
-	soulLevel      		INT			NOT NULL,
+    soulLevel 			INT 		NOT NULL, 
+	souls      			INT			NOT NULL,
 	gift      			TEXT 		NOT NULL,
 	class      			TEXT 		NOT NULL,
 	vitality      		INT 		NOT NULL,
@@ -592,13 +592,13 @@ CREATE OR REPLACE FUNCTION AdjacentAreastoMe(TEXT,TEXT, REFCURSOR) RETURNS refcu
 $$
 DECLARE
    playersName TEXT       := $1;
-   gamerstag   TEXT := $2;
-   resultset   REFCURSOR := $3;
+   gamerstag   TEXT 	  := $2;
+   resultset   REFCURSOR  := $3;
 BEGIN
    OPEN resultset FOR 
       SELECT connection,connection1,connection2,connection3,connection4,connection5
       FROM   PlayerCharacters p INNER JOIN Areas a ON p.areaName = a.areaName
-       WHERE  p.playerName = playersName AND p.gamertag = gamerstag;
+      WHERE  p.playerName = playersName AND p.gamertag = gamerstag;
    RETURN resultset;
 END;
 $$ 
@@ -608,4 +608,74 @@ SELECT AdjacentAreastoMe('The Wall','Cosmic0blivion', 'results');
 FETCH ALL FROM results;
 
 
+-- AdjacentAreas finds the areas adjacent to the specified Area
 
+CREATE OR REPLACE FUNCTION AdjacentAreas(TEXT, REFCURSOR) RETURNS refcursor AS 
+$$
+DECLARE
+   specifiedArea    TEXT      := $1;
+   resultset   		REFCURSOR := $2;
+BEGIN
+   OPEN resultset FOR 
+      SELECT connection,connection1,connection2,connection3,connection4,connection5
+      FROM    Areas
+      WHERE  areaName = specifiedArea;
+   RETURN resultset;
+END;
+$$ 
+LANGUAGE plpgsql;
+
+SELECT AdjacentAreas('Firelink Shrine', 'results1');
+FETCH ALL FROM results1;
+
+
+-- AffordableItems finds all items for sale that cost less then the souls the player has 
+
+CREATE OR REPLACE FUNCTION AffordableItems(TEXT, TEXT, REFCURSOR) RETURNS refcursor AS 
+$$
+DECLARE
+   specifiedGamertag    	TEXT      := $1;
+   specifiedPlayerName    	TEXT      := $2;
+   resultset   				REFCURSOR := $3;
+BEGIN
+   OPEN resultset FOR 
+      SELECT *
+      FROM   Sells s INNER JOIN Items i ON i.itemName = s.itemName
+      WHERE  s.costSouls<(SELECT souls
+                          FROM PlayerCharacters
+                          WHERE gamertag = specifiedGamertag AND playerName = specifiedPlayerName
+                          );
+   RETURN resultset;
+END;
+$$ 
+LANGUAGE plpgsql;
+
+SELECT AffordableItems('Cosmic0blivion', 'Steve', 'results2');
+FETCH ALL FROM results2;
+
+
+
+-- Triggers -----------------------------------------------------
+
+-- emp_Item() checks to see if any of the data being entered is null and tries to alert the user
+CREATE OR REPLACE FUNCTION emp_Item() RETURNS trigger AS $emp_Item$
+    BEGIN
+        -- Check that itemName and itemType are given
+        IF NEW.itemName IS NULL THEN
+            RAISE EXCEPTION 'itemName cannot be null';
+        END IF;
+        IF NEW.itemType IS NULL THEN
+            RAISE EXCEPTION '% cannot have null type', NEW.itemType;
+        END IF;
+
+        
+        RETURN NEW;
+    END;
+$emp_Item$ LANGUAGE plpgsql;
+
+CREATE TRIGGER emp_Item BEFORE INSERT OR UPDATE ON Items
+    FOR EACH ROW EXECUTE PROCEDURE emp_Item();
+    
+-- This is the query that i used to test to make sure the Trigger worked.    
+    INSERT INTO Items 
+    VALUES('Potato',NULL, NULL);
