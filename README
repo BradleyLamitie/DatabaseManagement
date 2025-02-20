@@ -1,8 +1,11 @@
-// Repository: DatabaseManagement
-// Creator:    Bradley Lamitie
-// Contact:    Bradley.Lamitie1@Marist.edu
-// Date(s):    September 2016 - December 2016
-// Purpose:    This repository was created to mark my progress through the 
-//             Database Management class taught at Marist College by 
-//             Alan Labouseur
-//
+Repository: DatabaseManagement
+Creator:    Bradley Lamitie
+Contact:    brad.lamitie@gmail.com
+Date(s):    September 2016 - December 2016
+Purpose:    This repository was created to mark my progress through the 
+            Database Management class taught at Marist College by 
+            Alan Labouseur
+
+My final project was a relational database written using PostgresQL in which I outlined a potential database schema for the video game Dark Souls. 
+- My schema documentation: https://github.com/BradleyLamitie/DatabaseManagement/blob/master/BradleyLamitieFinalDesign.pdf
+- My script for database creation: https://github.com/BradleyLamitie/DatabaseManagement/blob/master/BradleyLamitieFinalDesign.sql
